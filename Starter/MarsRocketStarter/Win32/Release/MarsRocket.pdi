@@ -1,0 +1,14 @@
+bindcompfmx240.bpl
+bindcomp240.bpl
+bindengine240.bpl
+xmlrtl240.bpl
+dbrtl240.bpl
+tethering240.bpl
+IndyIPClient240.bpl
+IndyCore240.bpl
+IndyProtocols240.bpl
+IndySystem240.bpl
+IndyIPCommon240.bpl
+IndyIPServer240.bpl
+fmx240.bpl
+rtl240.bpl

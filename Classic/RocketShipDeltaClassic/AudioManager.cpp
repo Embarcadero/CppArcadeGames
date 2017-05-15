@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 
-// This software is Copyright (c) 2016 Embarcadero Technologies, Inc.
+// This software is Copyright (c) 2017 Embarcadero Technologies, Inc.
 // You may only use this software if you are an authorized licensee
 // of Delphi, C++Builder or RAD Studio (Embarcadero Products).
 // This software is considered a Redistributable as defined under
@@ -20,8 +20,6 @@
 
 
 #include <System.hpp>
-
-bool GLoaded = false;
 
 #if defined(_PLAT_IOS) || defined(_PLAT_MACOS)
 void __fastcall oncompleteionIosProc( NSInteger SystemSndID, void*& AData )
@@ -55,7 +53,7 @@ __fastcall TAudioManager::~TAudioManager( )
   try
   {
     for ( int stop = 0, i = fSoundsList->Count - 1; i >= stop; i--)
-    {
+	{
 	  wRec = (PSoundRec)fSoundsList->Items[i];
       delete wRec;
       fSoundsList->Delete( i );
@@ -98,18 +96,7 @@ int __fastcall TAudioManager::AddSound( String ASoundFile )
 	wSndRec->SName = ChangeFileExt( wSndRec->SNameExt, "" );
 
 	#if defined (_PLAT_ANDROID)
-	GLoaded = false;
 	wSndRec->SID = fSoundPool->load( StringToJString( ASoundFile ), 1 );
-	while ( ! GLoaded )
-	{
-	  int soundID = fSoundPool->play( wSndRec->SID, 0, 0, 0, 0, 0 );
-	  if (soundID>0) {
-		fSoundPool->stop( wSndRec->SID );
-		GLoaded = true;
-	  }
-	  Sleep( 10 );
-	  Application->ProcessMessages();
-	}
 	#endif
 	#if defined(_PLAT_IOS)
 	wNSFilename = CFStringCreateWithCharacters( NULL, (const UniChar *)ASoundFile.c_str(), ASoundFile.Length( ) );
@@ -251,4 +238,3 @@ PSoundRec __fastcall TAudioManager::GetSoundFromIndex( int Aindex )
   else
 	return NULL;
 }
-

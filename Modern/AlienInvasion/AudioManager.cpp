@@ -21,6 +21,17 @@
 
 #include <System.hpp>
 
+#if defined(_PLAT_IOS) || defined(_PLAT_ANDROID)
+namespace std {
+// https://stackoverflow.com/questions/17902405/how-to-implement-make-unique-function-in-c11
+	template<typename T, typename... Args>
+	std::unique_ptr<T> make_unique(Args&&... args)
+	{
+		return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+	}
+}
+#endif
+
 #if defined(_PLAT_IOS) || defined(_PLAT_MACOS)
 void __fastcall oncompleteionIosProc( NSInteger SystemSndID, void*& AData )
 {
@@ -32,7 +43,7 @@ __fastcall TAudioManager::TAudioManager( )
 {
   try
   {
-	fSoundsList = new TList();
+	fSoundsList = std::make_unique<TList>();
 	#if defined(_PLAT_ANDROID)
 	_di_JObject obj = SharedActivity()->getSystemService(TJContext::JavaClass->AUDIO_SERVICE);
 	fAudioMgr = TJAudioManager::Wrap((_di_IJavaInstance)obj);
@@ -49,22 +60,17 @@ __fastcall TAudioManager::TAudioManager( )
 __fastcall TAudioManager::~TAudioManager( )
 {
   int i = 0;
-  PSoundRec wRec = NULL;
   try
   {
     for ( int stop = 0, i = fSoundsList->Count - 1; i >= stop; i--)
 	{
-	  wRec = (PSoundRec)fSoundsList->Items[i];
-      delete wRec;
-      fSoundsList->Delete( i );
+	  std::unique_ptr<TSoundRec> wRec((PSoundRec)fSoundsList->Items[i]);
+	  fSoundsList->Delete( i );
 	}
-	delete fSoundsList;
-	fSoundsList = NULL;
 	#if defined (_PLAT_ANDROID)
-	  fSoundPool = NULL;
-	  fAudioMgr = NULL;
+	  fSoundPool = nullptr;
+	  fAudioMgr = nullptr;
 	#endif
-	// todo check:  inherited::Destroy();
   }
   catch( Exception & E )
   {
@@ -76,7 +82,6 @@ __fastcall TAudioManager::~TAudioManager( )
 int __fastcall TAudioManager::AddSound( String ASoundFile )
 {
   int result = 0;
-  PSoundRec wSndRec = NULL;
   #if defined (_PLAT_ANDROID)
   JSoundPool_OnLoadCompleteListener *wOnAndroidSndComplete;
   #endif
@@ -90,7 +95,7 @@ int __fastcall TAudioManager::AddSound( String ASoundFile )
   try
   {
 	result = - 1;
-	wSndRec = new TSoundRec;
+	PSoundRec wSndRec = new TSoundRec;
 	wSndRec->SFilename = ASoundFile;
 	wSndRec->SNameExt = ExtractFileName( ASoundFile );
 	wSndRec->SName = ChangeFileExt( wSndRec->SNameExt, "" );
@@ -99,11 +104,11 @@ int __fastcall TAudioManager::AddSound( String ASoundFile )
 	wSndRec->SID = fSoundPool->load( StringToJString( ASoundFile ), 1 );
 	#endif
 	#if defined(_PLAT_IOS)
-	wNSFilename = CFStringCreateWithCharacters( NULL, (const UniChar *)ASoundFile.c_str(), ASoundFile.Length( ) );
-	wNSURL = CFURLCreateWithFileSystemPath( NULL, wNSFilename, kCFURLPOSIXPathStyle, false );
+	wNSFilename = CFStringCreateWithCharacters( nullptr, (const UniChar *)ASoundFile.c_str(), ASoundFile.Length( ) );
+	wNSURL = CFURLCreateWithFileSystemPath( nullptr, wNSFilename, kCFURLPOSIXPathStyle, false );
 	AudioServicesCreateSystemSoundID( wNSURL, &wSndID );
 	wSndRec->SID = wSndID;
-	AudioServicesAddSystemSoundCompletion( wSndID, NULL, NULL, oncompleteionIosProc, NULL );
+	AudioServicesAddSystemSoundCompletion( wSndID, nullptr, nullptr, oncompleteionIosProc, nullptr );
 	CFRelease(wNSFilename);
 	#endif
 	result = fSoundsList->Add( wSndRec );
@@ -118,19 +123,17 @@ int __fastcall TAudioManager::AddSound( String ASoundFile )
 
 void __fastcall TAudioManager::DeleteSound( int Aindex )
 {
-  PSoundRec wRec = NULL;
   try
   {
 	if ( Aindex < fSoundsList->Count )
 	{
-	  wRec = (PSoundRec)fSoundsList->Items[Aindex];
+	  std::unique_ptr<TSoundRec> wRec((PSoundRec)fSoundsList->Items[Aindex]);
 	  #if defined(_PLAT_ANDROID)
 	  fSoundPool->unload( wRec->SID );
 	  #endif
 	  #if defined(_PLAT_IOS)
 	  AudioServicesDisposeSystemSoundID( wRec->SID );
 	  #endif
-	  delete wRec;
 	  fSoundsList->Delete( Aindex );
 	}
   }
@@ -164,7 +167,7 @@ void __fastcall TAudioManager::DeleteSound( String AName )
 
 void __fastcall TAudioManager::PlaySound( int Aindex )
 {
-  PSoundRec wRec = NULL;
+  PSoundRec wRec = nullptr;
   #if defined (_PLAT_ANDROID)
   double wCurrVolume = 0.0, wMaxVolume = 0.0;
   double wVolume = 0.0;
@@ -185,7 +188,7 @@ void __fastcall TAudioManager::PlaySound( int Aindex )
 	  }
 	  #endif
 	  #if defined(_PLAT_IOS)
-	  AudioServicesAddSystemSoundCompletion( wRec->SID, NULL, NULL, oncompleteionIosProc, NULL );
+	  AudioServicesAddSystemSoundCompletion( wRec->SID, nullptr, nullptr, oncompleteionIosProc, nullptr );
 	  AudioServicesPlaySystemSound( wRec->SID );
 	  #else
 	   #ifdef _PLAT_MACOS
@@ -236,5 +239,5 @@ PSoundRec __fastcall TAudioManager::GetSoundFromIndex( int Aindex )
   if ( Aindex < fSoundsList->Count )
 	return (PSoundRec)fSoundsList->Items[Aindex];
   else
-	return NULL;
+	return nullptr;
 }

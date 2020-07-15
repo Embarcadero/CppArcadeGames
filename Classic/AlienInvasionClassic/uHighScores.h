@@ -44,6 +44,7 @@
 #include <System.Bindings.Outputs.hpp>
 #include <System.Rtti.hpp>
 #include <System.Ioutils.hpp>
+#include <FireDAC.Phys.SQLiteWrapper.Stat.hpp>
 
 class TFrameHighScores: public TFrame {
 __published:	// IDE-managed Components

@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 
-// This software is Copyright (c) 2016 Embarcadero Technologies, Inc.
+// This software is Copyright (c) 2016-2020 Embarcadero Technologies, Inc.
 // You may only use this software if you are an authorized licensee
 // of Delphi, C++Builder or RAD Studio (Embarcadero Products).
 // This software is considered a Redistributable as defined under
@@ -957,7 +957,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
           for ( int stop = EnemyList->Count - 1, II = 0; II <= stop; II++)
           {
             EnemyObj = (TRectangle*)( EnemyList->Objects[II] );
-            if ( IntersectRect( EnemyObj->ParentedRect, ProjObj->ParentedRect ) )
+            if ( IntersectRect( EnemyObj->BoundsRect, ProjObj->BoundsRect ) )
             {
               EnemyObj->TagFloat = EnemyObj->TagFloat + 1;
               ProjObj->TagFloat = PlayerData->ProjDuration + 1;
@@ -968,7 +968,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
           for ( int stop = PeopleList->Count - 1, II = 0; II <= stop; II++)
           {
             PersonObj = (TRectangle*)( PeopleList->Objects[II] );
-            if ( IntersectRect( PersonObj->ParentedRect, ProjObj->ParentedRect ) )
+            if ( IntersectRect( PersonObj->BoundsRect, ProjObj->BoundsRect ) )
             {
               PersonObj->TagFloat = PersonObj->TagFloat + 1;
 			  ProjObj->TagFloat = PlayerData->ProjDuration + 1;
@@ -1026,7 +1026,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  EnemyObj->Position->X = EnemyObj->Position->X + (double)EnemyObj->Tag * Cos( EnemyAngle );
 	  EnemyObj->Position->Y = EnemyObj->Position->Y + (double)EnemyObj->Tag * Sin( EnemyAngle );
       if ( PlayerData->Invulnerable == 0 )
-        if ( IntersectRect( Ship->ParentedRect, EnemyObj->ParentedRect ) )
+        if ( IntersectRect( Ship->BoundsRect, EnemyObj->BoundsRect ) )
         {
           PlayerHit();
           EnemyObj->TagFloat = EnemyObj->TagFloat + 1;
@@ -1036,7 +1036,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 		  for ( int stop = PeopleList->Count - 1, II = 0; II <= stop; II++)
           {
             PersonObj = (TRectangle*)( PeopleList->Objects[II] );
-            if ( IntersectRect( PersonObj->ParentedRect, EnemyObj->ParentedRect ) & ( PersonObj->TagString == PEOPLE_STATE_NONE ) )
+            if ( IntersectRect( PersonObj->BoundsRect, EnemyObj->BoundsRect ) & ( PersonObj->TagString == PEOPLE_STATE_NONE ) )
             {
               PersonObj->TagObject = EnemyObj;
               PersonObj->TagString = PEOPLE_STATE_CAPTURED;
@@ -1109,7 +1109,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  EnemyProjObj->Position->X = EnemyProjObj->Position->X + (double)EnemyProjObj->Tag * Cos( EnemyProjAngle );
 	  EnemyProjObj->Position->Y = EnemyProjObj->Position->Y + (double)EnemyProjObj->Tag * Sin( EnemyProjAngle );
       if ( PlayerData->Invulnerable == 0 )
-        if ( IntersectRect( Ship->ParentedRect, EnemyProjObj->ParentedRect ) )
+        if ( IntersectRect( Ship->BoundsRect, EnemyProjObj->BoundsRect ) )
         {
           PlayerHit();
           EnemyProjObj->TagFloat = EnemyProjObj->TagFloat + 1;
@@ -1216,23 +1216,23 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  CollectAngle = CollectObj->RotationAngle * PI / 180;
 	  CollectObj->Position->X = CollectObj->Position->X + (double)CollectObj->Tag * Cos( CollectAngle );
 	  CollectObj->Position->Y = CollectObj->Position->Y + (double)CollectObj->Tag * Sin( CollectAngle );
-	  if ( CollectObj->ParentedRect.CenterPoint().X >= ( MapLayout1->Width + ( CollectObj->Width / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().X >= ( MapLayout1->Width + ( CollectObj->Width / 2 ) ) )
       {
 		CollectObj->Position->X = ( MapLayout1->Position->X + 1 ) - ( CollectObj->Width / 2 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y >= ( MapLayout1->Height + ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y >= ( MapLayout1->Height + ( CollectObj->Height / 2 ) ) )
       {
 		CollectObj->Position->Y = ( MapLayout1->Position->Y + 1 ) - ( CollectObj->Height / 2 );
       }
-      if ( CollectObj->ParentedRect.CenterPoint().X <= ( MapLayout1->Position->X - ( CollectObj->Width / 2 ) ) )
+      if ( CollectObj->BoundsRect.CenterPoint().X <= ( MapLayout1->Position->X - ( CollectObj->Width / 2 ) ) )
       {
         CollectObj->Position->X = ( MapLayout1->Width - 1 );
       }
-      if ( CollectObj->ParentedRect.CenterPoint().Y <= ( MapLayout1->Position->Y - ( CollectObj->Height / 2 ) ) )
+      if ( CollectObj->BoundsRect.CenterPoint().Y <= ( MapLayout1->Position->Y - ( CollectObj->Height / 2 ) ) )
       {
         CollectObj->Position->Y = ( MapLayout1->Height - 1 );
       }
-      if ( IntersectRect( Ship->ParentedRect, CollectObj->ParentedRect ) )
+      if ( IntersectRect( Ship->BoundsRect, CollectObj->BoundsRect ) )
       {
         AddScore( 5000 );
         CollectObj->TagFloat = COLLECTITEM_DURATION + 1;
@@ -1278,7 +1278,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
       Portal1->TagFloat = Portal1->TagFloat - 1;
     if ( Portal2->TagFloat > 0 )
       Portal2->TagFloat = Portal2->TagFloat - 1;
-    if ( IntersectRect( Ship->ParentedRect, Portal1->ParentedRect ) )
+    if ( IntersectRect( Ship->BoundsRect, Portal1->BoundsRect ) )
     {
       if ( Portal1->TagFloat == 0 )
 	  {
@@ -1287,7 +1287,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
       }
     }
     else
-      if ( IntersectRect( Ship->ParentedRect, Portal2->ParentedRect ) )
+      if ( IntersectRect( Ship->BoundsRect, Portal2->BoundsRect ) )
       {
         if ( Portal2->TagFloat == 0 )
         {
@@ -2637,7 +2637,7 @@ TScreenOrientation __fastcall TGameForm::GetScreenOrientation( )
 
 void __fastcall RegisterRenderingSetup( )
 {
-  IFMXRenderingSetupService* SetupService = nullptr;
+  IFMXRenderingSetupService *SetupService = NULL;
   if ( TPlatformServices::Current->SupportsPlatformService( __uuidof(IFMXRenderingSetupService), (void *)&SetupService ) )
   {
 	SetupService->Subscribe(new TRenderingSetupCallbackRef());
@@ -2656,6 +2656,9 @@ class uGame_unit
 public:
 uGame_unit()
 {
+  // enables Metal API on iOS and macOS
+  //GlobalUseMetal = True;
+
   // enable the GPU on Windows
   //GlobalUseGPUCanvas = true;
   uGame_initialization();

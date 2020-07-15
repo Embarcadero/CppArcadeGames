@@ -22,7 +22,6 @@ object FrameHighScores: TFrameHighScores
     Size.Width = 380.000000000000000000
     Size.Height = 32.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 16
     Text = 'Continue'
   end
   object ListView1: TListView
@@ -39,7 +38,6 @@ object FrameHighScores: TFrameHighScores
     Size.Width = 440.000000000000000000
     Size.Height = 179.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 33
     ItemAppearanceObjects.ItemObjects.Accessory.Visible = False
     CanSwipeDelete = False
     ShowSelection = False
@@ -93,7 +91,6 @@ object FrameHighScores: TFrameHighScores
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Center
       StyleLookup = 'clearingeditstyle'
-      TabOrder = 1
       Size.Width = 246.000000000000000000
       Size.Height = 37.000000000000000000
       Size.PlatformDefault = False
@@ -104,7 +101,6 @@ object FrameHighScores: TFrameHighScores
       Size.Width = 319.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 2
       ColumnCollection = <
         item
           Value = 50.000000000000000000
@@ -134,7 +130,6 @@ object FrameHighScores: TFrameHighScores
         Size.Width = 97.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 0
         Text = 'Okay'
         OnClick = OkayBTNClick
       end
@@ -145,7 +140,6 @@ object FrameHighScores: TFrameHighScores
         Size.Width = 98.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 1
         Text = 'Cancel'
         OnClick = CancelBTNClick
       end
@@ -165,6 +159,7 @@ object FrameHighScores: TFrameHighScores
     end
   end
   object BindSourceDB1: TBindSourceDB
+    DataSet = FDTableHighScores
     ScopeMappings = <>
     Left = 408
     Top = 76
@@ -189,5 +184,74 @@ object FrameHighScores: TFrameHighScores
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
+  end
+  object FireScoresList: TFDConnection
+    Params.Strings = (
+      'Database='
+      'DriverID=SQLite')
+    LoginPrompt = False
+    AfterConnect = FireScoresListAfterConnect
+    BeforeConnect = FireScoresListBeforeConnect
+    Left = 40
+    Top = 28
+  end
+  object FDTableHighScores: TFDTable
+    IndexFieldNames = 'Score'
+    Connection = FireScoresList
+    FormatOptions.AssignedValues = [fvSortOptions]
+    FormatOptions.SortOptions = [soDescending]
+    UpdateOptions.UpdateTableName = 'HighScores'
+    TableName = 'HighScores'
+    Left = 40
+    Top = 84
+    object FDTableHighScoresName: TWideMemoField
+      FieldName = 'Name'
+      BlobType = ftWideMemo
+    end
+    object FDTableHighScoresScore: TIntegerField
+      FieldName = 'Score'
+    end
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'FMX'
+    Left = 72
+    Top = 220
+  end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    EngineLinkage = slStatic
+    Left = 384
+    Top = 220
+  end
+  object FDQueryDelete: TFDQuery
+    Connection = FireScoresList
+    SQL.Strings = (
+      'DELETE FROM HighScores WHERE Name = (:Name)')
+    Left = 336
+    Top = 28
+    ParamData = <
+      item
+        Name = 'NAME'
+        ParamType = ptInput
+      end
+      item
+        Name = 'SCORE'
+        ParamType = ptInput
+      end>
+  end
+  object FDQueryInsert: TFDQuery
+    Connection = FireScoresList
+    SQL.Strings = (
+      'INSERT INTO HighScores (Name,Score) VALUES (:Name,:Score)')
+    Left = 408
+    Top = 28
+    ParamData = <
+      item
+        Name = 'NAME'
+        ParamType = ptInput
+      end
+      item
+        Name = 'SCORE'
+        ParamType = ptInput
+      end>
   end
 end

@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 
-// This software is Copyright (c) 2016 Embarcadero Technologies, Inc.
+// This software is Copyright (c) 2016-2020 Embarcadero Technologies, Inc.
 // You may only use this software if you are an authorized licensee
 // of Delphi, C++Builder or RAD Studio (Embarcadero Products).
 // This software is considered a Redistributable as defined under
@@ -821,7 +821,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
     for ( int stop = GroundList->Count - 1, I = 0; I <= stop; I++)
     {
 	  GroundObj = (TRectangle*) GroundList->Objects[I] ;
-	  if ( IntersectRect( GroundObj->ParentedRect, Ship->ParentedRect ) )
+	  if ( IntersectRect( GroundObj->BoundsRect, Ship->BoundsRect ) )
       {
         if ( ( Ship->RotationAngle > - 10 ) && ( Ship->RotationAngle < 10 ) && ( PlayerData->VerticalVelocity < PLAYER_LANDING_VELOCITY ) && ( Ship->Position->X > GroundObj->Position->X ) && ( ( Ship->Position->X + Ship->Width ) < ( GroundObj->Position->X + GroundObj->Width ) ) && ( GroundObj->TagString == 'P' ) )
         {
@@ -860,23 +860,23 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  CollectAngle = CollectObj->RotationAngle * PI / 180;
 	  CollectObj->Position->X = CollectObj->Position->X + (double)CollectObj->Tag * Cos( CollectAngle );
 	  CollectObj->Position->Y = CollectObj->Position->Y + (double)CollectObj->Tag * Sin( CollectAngle );
-	  if ( CollectObj->ParentedRect.CenterPoint().X >= ( ScreenLayout->Width + ( CollectObj->Width / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().X >= ( ScreenLayout->Width + ( CollectObj->Width / 2 ) ) )
       {
 		CollectObj->Position->X = ( ScreenLayout->Position->X + 1 ) - ( CollectObj->Width / 2 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y >= ( ScreenLayout->Height + ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y >= ( ScreenLayout->Height + ( CollectObj->Height / 2 ) ) )
 	  {
 		CollectObj->Position->Y = ( ScreenLayout->Position->Y + 1 ) - ( CollectObj->Height / 2 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( CollectObj->Width / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( CollectObj->Width / 2 ) ) )
       {
         CollectObj->Position->X = ( ScreenLayout->Width - 1 );
       }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( CollectObj->Height / 2 ) ) )
       {
         CollectObj->Position->Y = ( ScreenLayout->Height - 1 );
       }
-      if ( IntersectRect( Ship->ParentedRect, CollectObj->ParentedRect ) )
+      if ( IntersectRect( Ship->BoundsRect, CollectObj->BoundsRect ) )
       {
         AddScore( 100 * PlayerData->Level );
         CollectObj->TagFloat = CollectObj->TagFloat + 1;
@@ -1965,7 +1965,6 @@ void __fastcall RegisterRenderingSetup( )
   // There is also SetupService->Unsubscribe, which removes the hook.
 }
 
-
 void uGame_initialization()
 {
   RegisterRenderingSetup();
@@ -1977,6 +1976,9 @@ class uGame_unit
 public:
 uGame_unit()
 {
+  // enables Metal API on iOS and macOS
+  GlobalUseMetal = True;
+
   // enables the GPU on Windows
   //GlobalUseGPUCanvas := True;
   uGame_initialization();

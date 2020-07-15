@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 
-// This software is Copyright (c) 2016 Embarcadero Technologies, Inc.
+// This software is Copyright (c) 2016-2020 Embarcadero Technologies, Inc.
 // You may only use this software if you are an authorized licensee
 // of Delphi, C++Builder or RAD Studio (Embarcadero Products).
 // This software is considered a Redistributable as defined under
@@ -16,13 +16,13 @@
 #pragma hdrstop
 #include <System.StartUpCopy.hpp>
 //---------------------------------------------------------------------------
-USEFORM("uInstructions.cpp", FrameInstructions); /* TFrame: File Type */
 USEFORM("uHighScores.cpp", FrameHighScores); /* TFrame: File Type */
+USEFORM("uInstructions.cpp", FrameInstructions); /* TFrame: File Type */
 USEFORM("uLevelComplete.cpp", FrameLevelComplete); /* TFrame: File Type */
-USEFORM("uSettings.cpp", FrameSettings); /* TFrame: File Type */
 USEFORM("uMainMenu.cpp", FrameMainMenu); /* TFrame: File Type */
-USEFORM("uGameOver.cpp", FrameGameOver); /* TFrame: File Type */
+USEFORM("uSettings.cpp", FrameSettings); /* TFrame: File Type */
 USEFORM("uGame.cpp", GameForm);
+USEFORM("uGameOver.cpp", FrameGameOver); /* TFrame: File Type */
 //---------------------------------------------------------------------------
 extern "C" int FMXmain()
 {

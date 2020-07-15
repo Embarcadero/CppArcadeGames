@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 
-// This software is Copyright (c) 2016 Embarcadero Technologies, Inc.
+// This software is Copyright (c) 2016-2020 Embarcadero Technologies, Inc.
 // You may only use this software if you are an authorized licensee
 // of Delphi, C++Builder or RAD Studio (Embarcadero Products).
 // This software is considered a Redistributable as defined under
@@ -775,19 +775,19 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
   }
   Ship->Position->X = Ship->Position->X + PlayerData->SpeedX;
   Ship->Position->Y = Ship->Position->Y - PlayerData->SpeedY;
-  if ( Ship->ParentedRect.CenterPoint().X >= ( ScreenLayout->Width + ( Ship->Width / 2 ) ) )
+  if ( Ship->BoundsRect.CenterPoint().X >= ( ScreenLayout->Width + ( Ship->Width / 2 ) ) )
   {
 	Ship->Position->X = ( ScreenLayout->Position->X + 1 ) - ( Ship->Width / 2 );
   }
-  if ( Ship->ParentedRect.CenterPoint().Y >= ( ScreenLayout->Height + ( Ship->Height / 2 ) ) )
+  if ( Ship->BoundsRect.CenterPoint().Y >= ( ScreenLayout->Height + ( Ship->Height / 2 ) ) )
   {
 	Ship->Position->Y = ( ScreenLayout->Position->Y + 1 ) - ( Ship->Height / 2 );
   }
-  if ( Ship->ParentedRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( Ship->Width / 2 ) ) )
+  if ( Ship->BoundsRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( Ship->Width / 2 ) ) )
   {
     Ship->Position->X = ( ScreenLayout->Width - 1 );
   }
-  if ( Ship->ParentedRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( Ship->Height / 2 ) ) )
+  if ( Ship->BoundsRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( Ship->Height / 2 ) ) )
   {
     Ship->Position->Y = ( ScreenLayout->Height - 1 );
   }
@@ -818,7 +818,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
         for ( int stop = RockList->Count - 1, II = 0; II <= stop; II++)
         {
           RockObj = (TRectangle*)( RockList->Objects[II] );
-          if ( IntersectRect( RockObj->ParentedRect, ProjObj->ParentedRect ) )
+          if ( IntersectRect( RockObj->BoundsRect, ProjObj->BoundsRect ) )
           {
             RockObj->TagFloat = RockObj->TagFloat + 1;
 			ProjObj->TagFloat = PlayerData->ProjDuration + 1;
@@ -829,26 +829,26 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
         for ( int stop = EnemyList->Count - 1, II = 0; II <= stop; II++)
         {
           EnemyObj = (TRectangle*)( EnemyList->Objects[II] );
-          if ( IntersectRect( EnemyObj->ParentedRect, ProjObj->ParentedRect ) )
+          if ( IntersectRect( EnemyObj->BoundsRect, ProjObj->BoundsRect ) )
           {
             EnemyObj->TagFloat = EnemyObj->TagFloat + 1;
             ProjObj->TagFloat = PlayerData->ProjDuration + 1;
 			break;
           }
         }
-	  if ( ProjObj->ParentedRect.CenterPoint().X >= ( ScreenLayout->Width + ( ProjObj->Width / 2 ) ) )
+	  if ( ProjObj->BoundsRect.CenterPoint().X >= ( ScreenLayout->Width + ( ProjObj->Width / 2 ) ) )
       {
 		ProjObj->Position->X = ( ScreenLayout->Position->X + 1 ) - ( ProjObj->Width / 2 );
       }
-	  if ( ProjObj->ParentedRect.CenterPoint().Y >= ( ScreenLayout->Height + ( ProjObj->Height / 2 ) ) )
+	  if ( ProjObj->BoundsRect.CenterPoint().Y >= ( ScreenLayout->Height + ( ProjObj->Height / 2 ) ) )
       {
 		ProjObj->Position->Y = ( ScreenLayout->Position->Y + 1 ) - ( ProjObj->Height / 2 );
       }
-	  if ( ProjObj->ParentedRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( ProjObj->Width / 2 ) ) )
+	  if ( ProjObj->BoundsRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( ProjObj->Width / 2 ) ) )
       {
         ProjObj->Position->X = ( ScreenLayout->Width - 1 );
 	  }
-      if ( ProjObj->ParentedRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( ProjObj->Height / 2 ) ) )
+      if ( ProjObj->BoundsRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( ProjObj->Height / 2 ) ) )
       {
         ProjObj->Position->Y = ( ScreenLayout->Height - 1 );
       }
@@ -866,7 +866,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
     {
       RockObj = (TRectangle*)( RockList->Objects[I] );
       if ( PlayerData->Invulnerable == 0 )
-        if ( IntersectRect( RockObj->ParentedRect, Ship->ParentedRect ) )
+        if ( IntersectRect( RockObj->BoundsRect, Ship->BoundsRect ) )
           if ( IntersectCircle( RockObj, Ship ) )
           {
             PlayerHit();
@@ -903,19 +903,19 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 		RockAngle = RockObj->RotationAngle * PI / 180;
 		RockObj->Position->X = RockObj->Position->X + (double)RockObj->Tag * Cos( RockAngle );
 		RockObj->Position->Y = RockObj->Position->Y + (double)RockObj->Tag * Sin( RockAngle );
-		if ( RockObj->ParentedRect.CenterPoint().X >= ( ScreenLayout->Width + ( RockObj->Width / 2 ) ) )
+		if ( RockObj->BoundsRect.CenterPoint().X >= ( ScreenLayout->Width + ( RockObj->Width / 2 ) ) )
 		{
 		  RockObj->Position->X = ( ScreenLayout->Position->X + 1 ) - ( RockObj->Width / 2 );
 		}
-		if ( RockObj->ParentedRect.CenterPoint().Y >= ( ScreenLayout->Height + ( RockObj->Height / 2 ) ) )
+		if ( RockObj->BoundsRect.CenterPoint().Y >= ( ScreenLayout->Height + ( RockObj->Height / 2 ) ) )
 		{
 		  RockObj->Position->Y = ( ScreenLayout->Position->Y + 1 ) - ( RockObj->Height / 2 );
 		}
-		if ( RockObj->ParentedRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( RockObj->Width / 2 ) ) )
+		if ( RockObj->BoundsRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( RockObj->Width / 2 ) ) )
 		{
 		  RockObj->Position->X = ( ScreenLayout->Width - 1 );
 		}
-		if ( RockObj->ParentedRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( RockObj->Height / 2 ) ) )
+		if ( RockObj->BoundsRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( RockObj->Height / 2 ) ) )
 		{
 		  RockObj->Position->Y = ( ScreenLayout->Height - 1 );
 		}
@@ -931,7 +931,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  EnemyObj->Position->X = EnemyObj->Position->X + (double)EnemyObj->Tag * Cos( EnemyAngle );
 	  EnemyObj->Position->Y = EnemyObj->Position->Y + (double)EnemyObj->Tag * Sin( EnemyAngle );
 	  if ( PlayerData->Invulnerable == 0 )
-		if ( IntersectRect( Ship->ParentedRect, EnemyObj->ParentedRect ) )
+		if ( IntersectRect( Ship->BoundsRect, EnemyObj->BoundsRect ) )
 		{
 		  PlayerHit();
 		  EnemyObj->TagFloat = EnemyObj->TagFloat + 1;
@@ -962,7 +962,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  EnemyProjObj->Position->X = EnemyProjObj->Position->X + (double)EnemyProjObj->Tag * Cos( EnemyProjAngle );
 	  EnemyProjObj->Position->Y = EnemyProjObj->Position->Y + (double)EnemyProjObj->Tag * Sin( EnemyProjAngle );
       if ( PlayerData->Invulnerable == 0 )
-        if ( IntersectRect( Ship->ParentedRect, EnemyProjObj->ParentedRect ) )
+        if ( IntersectRect( Ship->BoundsRect, EnemyProjObj->BoundsRect ) )
         {
           PlayerHit();
           EnemyProjObj->TagFloat = EnemyProjObj->TagFloat + 1;
@@ -999,23 +999,23 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  CollectAngle = CollectObj->RotationAngle * PI / 180;
 	  CollectObj->Position->X = CollectObj->Position->X + (double)CollectObj->Tag * Cos( CollectAngle );
 	  CollectObj->Position->Y = CollectObj->Position->Y + (double)CollectObj->Tag * Sin( CollectAngle );
-	  if ( CollectObj->ParentedRect.CenterPoint().X >= ( ScreenLayout->Width + ( CollectObj->Width / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().X >= ( ScreenLayout->Width + ( CollectObj->Width / 2 ) ) )
 	  {
 		CollectObj->Position->X = ( ScreenLayout->Position->X + 1 ) - ( CollectObj->Width / 2 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y >= ( ScreenLayout->Height + ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y >= ( ScreenLayout->Height + ( CollectObj->Height / 2 ) ) )
       {
 		CollectObj->Position->Y = ( ScreenLayout->Position->Y + 1 ) - ( CollectObj->Height / 2 );
       }
-      if ( CollectObj->ParentedRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( CollectObj->Width / 2 ) ) )
+      if ( CollectObj->BoundsRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( CollectObj->Width / 2 ) ) )
       {
         CollectObj->Position->X = ( ScreenLayout->Width - 1 );
       }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( CollectObj->Height / 2 ) ) )
 	  {
         CollectObj->Position->Y = ( ScreenLayout->Height - 1 );
       }
-      if ( IntersectRect( Ship->ParentedRect, CollectObj->ParentedRect ) )
+      if ( IntersectRect( Ship->BoundsRect, CollectObj->BoundsRect ) )
       {
         AddScore( 5000 );
         CollectObj->TagFloat = COLLECTITEM_DURATION + 1;
@@ -2256,6 +2256,9 @@ class uGame_unit
 public:
 uGame_unit()
 {
+  // enables Metal API on iOS and macOS
+  GlobalUseMetal = True;
+
   //enable the GPU on Windows
   //GlobalUseGPUCanvas := True;
   uGame_initialization();

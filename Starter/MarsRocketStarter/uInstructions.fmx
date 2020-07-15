@@ -21,7 +21,6 @@ object FrameInstructions: TFrameInstructions
     Size.Width = 380.000000000000000000
     Size.Height = 32.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 3
     Text = 'Continue'
   end
   object Text1: TText
@@ -32,10 +31,13 @@ object FrameInstructions: TFrameInstructions
     Size.Height = 189.000000000000000000
     Size.PlatformDefault = False
     Text = 
-      'Destroy all of the invading aliens to move to the next level. Pr' +
-      'ess the left arrow button or key to move left. Press the right a' +
-      'rrow button or key to move right. Press the fire button or Z key' +
-      ' to fire. You have three lives. Watch out for alien ships!'
+      'Land your rocket directly on a landing pad to move on to the nex' +
+      't level. You must land straight down with low velocity to avoid ' +
+      'crashing. Press the left arrow button, key, or tilt left to rota' +
+      'te left. Press the right arrow button, key, or tilt right to rot' +
+      'ate right. Press the thruster button, up arrow, Z key, or tilt f' +
+      'orward to engage your thruster. Collect all of the stars for ext' +
+      'ra points. You have three lives. Don'#39't run out of fuel!'
     TextSettings.FontColor = claWhite
   end
   object Label1: TLabel

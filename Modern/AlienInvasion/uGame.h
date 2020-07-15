@@ -26,6 +26,7 @@
 #include <System.Tether.AppProfile.hpp>
 #include <System.Tether.Manager.hpp>
 #include <System.Threading.hpp>
+#include <System.IniFiles.hpp>
 #include "AudioManager.h"
 #include "uMainMenu.h"
 #include "uInstructions.h"

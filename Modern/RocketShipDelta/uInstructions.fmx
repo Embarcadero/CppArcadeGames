@@ -21,7 +21,6 @@ object FrameInstructions: TFrameInstructions
     Size.Width = 380.000000000000000000
     Size.Height = 32.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 3
     Text = 'Continue'
   end
   object Text1: TText
@@ -32,10 +31,16 @@ object FrameInstructions: TFrameInstructions
     Size.Height = 189.000000000000000000
     Size.PlatformDefault = False
     Text = 
-      'Destroy all of the invading aliens to move to the next level. Pr' +
-      'ess the left arrow button or key to move left. Press the right a' +
-      'rrow button or key to move right. Press the fire button or Z key' +
-      ' to fire. You have three lives. Watch out for alien ships!'
+      'Protect the people on the ground and destroy all of the aliens t' +
+      'o move on to the next level. Press the left arrow button, key, o' +
+      'r tilt left to fly left. Press the right arrow button, key, or t' +
+      'ilt right to fly right. Press the up arrow button, key, or tilt ' +
+      'up to fly up. Press the down arrow button, key, or tilt down to ' +
+      'fly down. Press the fire button or Z key to fire your laser. Pre' +
+      'ss the bomb button or X key to fire your bombs. Press the warp b' +
+      'utton or C key to warp your rocket. You can no cross the plasma ' +
+      'fence at the edges of each level. Use to warp field to warp betw' +
+      'een the edges of the level.'
     TextSettings.FontColor = claWhite
   end
   object Label1: TLabel

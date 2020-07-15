@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 
-// This software is Copyright (c) 2016 Embarcadero Technologies, Inc.
+// This software is Copyright (c) 2016-2020 Embarcadero Technologies, Inc.
 // You may only use this software if you are an authorized licensee
 // of Delphi, C++Builder or RAD Studio (Embarcadero Products).
 // This software is considered a Redistributable as defined under
@@ -775,9 +775,9 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 		for ( II = 0; II < EnemyList->Count; II++ )
 		{
 		  EnemyObj = (TRectangle *)( EnemyList->Objects[II] );
-		  if ( EnemyObj->Tag != 0 )
+		  if ( (int) EnemyObj->Tag != 0 )
 		  {
-			EnemyRect = EnemyObj->ParentedRect;
+			EnemyRect = EnemyObj->BoundsRect;
 		  }
 		  else
 			EnemyRect = EnemyObj->AbsoluteRect;
@@ -811,7 +811,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 		for ( II = 0; II < CollectList->Count; II++ )
 		{
 		  CollectObj = (TRectangle*)( CollectList->Objects[II] );
-		  if ( IntersectRect( CollectObj->ParentedRect, ProjObj->ParentedRect ) )
+		  if ( IntersectRect( CollectObj->BoundsRect, ProjObj->BoundsRect ) )
 		  // if IntersectRect(CollectObj->AbsoluteRect, ProjObj->AbsoluteRect) then
 		  // if RockObj->PointInObject(ProjObj->Position->X,ProjObj->Position->Y) then
 		  {
@@ -837,7 +837,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	for ( I = 0; I < EnemyList->Count; I++ )
 	{
 	  EnemyObj = (TRectangle*)( EnemyList->Objects[I] );
-	  if ( EnemyObj->Tag != 0 )
+	  if ( (int)EnemyObj->Tag != 0 )
 	  {
 		EnemyAngle = EnemyObj->RotationAngle * PI / 180;
 		EnemyObj->Position->X = EnemyObj->Position->X + (double)EnemyObj->Tag * Cos( EnemyAngle );
@@ -868,7 +868,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  }
 	  if ( RandomRange( 1, 500 ) == 1 )
 	  {
-		if ( EnemyObj->Tag != 0 )
+		if ( (int) EnemyObj->Tag != 0 )
 		{
 		  EnemyProjList->AddObject( "", SpawnEnemyProj( EnemyObj, EnemyObj->Position->X, EnemyObj->Position->Y, 180 ) );
 		}
@@ -883,7 +883,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 		// EnemyList->Objects[I] := nil;
 		if ( EnemyObj->TagFloat > 0 )
 		{
-		  if ( EnemyObj->Tag != 0 )
+		  if ( (int)EnemyObj->Tag != 0 )
 		  {
 			CreateExplosion( EnemyObj->Position->X + ( EnemyObj->Width / 2 ), EnemyObj->Position->Y + ( EnemyObj->Height / 2 ) );
 			AddScore( 500 );
@@ -895,7 +895,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 			AddScore( 100 );
 		  }
 		}
-		if ( EnemyObj->Tag != 0 )
+		if ( (int)EnemyObj->Tag != 0 )
 		{
 		  SetPoolObj( EnemyPool, EnemyList->Names[I], EnemyObj );
 		  EnemyList->Delete( I );
@@ -910,7 +910,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  }
 	  else
 	  {
-		if ( EnemyObj->Tag == 0 )
+		if ( (int)EnemyObj->Tag == 0 )
 		{
 		  if ( EnemyObj->Position->X > RightMostEnemyX )
 		  {
@@ -995,19 +995,19 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
 	  CollectAngle = CollectObj->RotationAngle * PI / 180;
 	  CollectObj->Position->X = CollectObj->Position->X + (double)CollectObj->Tag * Cos( CollectAngle );
 	  CollectObj->Position->Y = CollectObj->Position->Y + (double)CollectObj->Tag * Sin( CollectAngle );
-	  if ( CollectObj->ParentedRect.CenterPoint().X >= ( ScreenLayout->Width + ( CollectObj->Width / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().X >= ( ScreenLayout->Width + ( CollectObj->Width / 2 ) ) )
 	  {
 		CollectObj->Position->X = ( ScreenLayout->Position->X + 1 ) - ( CollectObj->Width / 2 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y >= ( ScreenLayout->Height + ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y >= ( ScreenLayout->Height + ( CollectObj->Height / 2 ) ) )
 	  {
 		CollectObj->Position->Y = ( ScreenLayout->Position->Y + 1 ) - ( CollectObj->Height / 2 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( CollectObj->Width / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().X <= ( ScreenLayout->Position->X - ( CollectObj->Width / 2 ) ) )
 	  {
 		CollectObj->Position->X = ( ScreenLayout->Width - 1 );
 	  }
-	  if ( CollectObj->ParentedRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( CollectObj->Height / 2 ) ) )
+	  if ( CollectObj->BoundsRect.CenterPoint().Y <= ( ScreenLayout->Position->Y - ( CollectObj->Height / 2 ) ) )
 	  {
 		CollectObj->Position->Y = ( ScreenLayout->Height - 1 );
 	  }
@@ -1030,7 +1030,7 @@ void __fastcall TGameForm::GameLoopTimer( TObject *Sender )
   }
 
   // move enemy grid
-  if ( Enemies->Tag == 0 )
+  if ( (int)Enemies->Tag == 0 )
   {
 	Enemies->Position->X = Enemies->Position->X + EnemySpeed;
   }
@@ -1071,7 +1071,7 @@ float __fastcall TGameForm::GetTheMostRightEnemyPosition( TStringList *EnemyList
   for ( I = 0; I < EnemyList->Count; I++)
   {
 	TRectangle *pObj = (TRectangle *)(EnemyList->Objects[I]);
-	if ( ( pObj->Position->X > X ) && ( pObj->Tag == 0 ) )
+	if ( ( pObj->Position->X > X ) && ( (int)pObj->Tag == 0 ) )
 	  X = pObj->Position->X;
   }
   return X;
@@ -1084,7 +1084,7 @@ float __fastcall TGameForm::GetTheMostTopEnemyPosition( TStringList *EnemyList )
   for ( int I = 0; I < EnemyList->Count; I++)
   {
 	TRectangle *pObj = (TRectangle *)(EnemyList->Objects[I]);
-	if ( ( pObj->Position->Y > Y ) && ( pObj->Tag == 0 ) )
+	if ( ( pObj->Position->Y > Y ) && ( (int)pObj->Tag == 0 ) )
 	  Y = pObj->Position->Y;
   }
   return Y;
@@ -2110,7 +2110,7 @@ void __fastcall TGameForm::CleanupGame( bool Continue )
 	  for ( int stop = 0, I = EnemyList->Count - 1; I >= stop; I--)
 	  {
 		EnemyObj = (TRectangle*)( EnemyList->Objects[I] );
-		if ( EnemyObj->Tag != 0 )
+		if ( (int)EnemyObj->Tag != 0 )
 		{
 		  SetPoolObj( EnemyPool, EnemyList->Names[I], EnemyObj );
 		  EnemyList->Delete( I );
@@ -2290,6 +2290,9 @@ class uGame_unit
 public:
 uGame_unit()
 {
+  // enables Metal API on iOS and macOS
+  GlobalUseMetal = True;
+
   // enables the GPU on Windows
   //GlobalUseGPUCanvas = true;
 
